@@ -7,6 +7,8 @@ ENV MONGO_USER='admin' \
     APP_HOST='' \
     PORT=3000
 
+RUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001 -G appgroup
+
 WORKDIR /home/app
 
 COPY ./app/package*.json ./
@@ -16,6 +18,10 @@ COPY ./app .
 
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
+RUN chown -R appuser:appgroup /home/app
+
+USER appuser
 
 EXPOSE 3000
 
